@@ -37,13 +37,6 @@ const illusions = [
     visual: "kanizsa",
   },
   {
-    title: "ルビンの壺",
-    category: "錯視",
-    lead: "中央の壺を見るか、左右の横顔を見るかで図と地が入れ替わります。",
-    hint: "白い形と黒い形を交互に主役として見てください。",
-    visual: "rubin",
-  },
-  {
     title: "チェッカーシャドー",
     category: "明暗・色",
     lead: "影の中の明るいマスと、影の外の暗いマスが同じ明るさに見えにくくなります。",
@@ -68,7 +61,7 @@ const illusions = [
     title: "運動残効",
     category: "運動",
     lead: "動く模様を見たあと静止画を見ると、反対方向に動いて感じられることがあります。",
-    hint: "30秒ほど見続けると効果が強くなります。",
+    hint: "中央を10秒ほど見続けてから、下の静止グリッドを見ると効果が出やすくなります。",
     visual: "aftereffect",
   },
   {
@@ -158,62 +151,89 @@ function visual(name, compact = false) {
   const map = {
     muller: svg(`
       <rect width="360" height="260" fill="#fff8ee"/>
-      <g stroke="#15212b" stroke-width="8" stroke-linecap="round" fill="none">
-        <path d="M85 88h190M85 172h190"/>
-        <path d="M85 88l38-28M85 88l38 28M275 88l-38-28M275 88l-38 28"/>
-        <path d="M85 172l-38-28M85 172l-38 28M275 172l38-28M275 172l38 28"/>
-      </g>`),
+      <g stroke="#17212b" stroke-width="7" stroke-linecap="round" fill="none" opacity=".92">
+        <path d="M70 76l42 28M70 76l42-28M290 76l-42 28M290 76l-42-28"/>
+        <path d="M70 184l-42 28M70 184l-42-28M290 184l42 28M290 184l42-28"/>
+      </g>
+      <g stroke="#d9273f" stroke-width="10" stroke-linecap="round" fill="none">
+        <path d="M70 76h220"/>
+        <path d="M70 184h220"/>
+      </g>
+      <g stroke="#d9273f" stroke-width="2" opacity=".28"><path d="M70 58v36M290 58v36M70 166v36M290 166v36"/></g>`),
     ponzo: svg(`
-      <rect width="360" height="260" fill="#16212c"/>
-      <g stroke="#f4efe7" stroke-width="5" opacity=".8"><path d="M90 245L165 20M270 245L195 20"/>
-      ${Array.from({ length: 9 }, (_, i) => `<path d="M${48 + i * 13} ${236 - i * 24}H${312 - i * 13}"/>`).join("")}</g>
-      <g stroke="#efc84a" stroke-width="11" stroke-linecap="round"><path d="M119 91h122"/><path d="M119 171h122"/></g>`),
+      <rect width="360" height="260" fill="#14202b"/>
+      <g stroke="#e9eef0" stroke-width="5" stroke-linecap="round" opacity=".9">
+        <path d="M54 250L148 8"/><path d="M306 250L212 8"/>
+      </g>
+      <g stroke="#8b99a6" stroke-width="4" opacity=".78">
+        ${Array.from({ length: 11 }, (_, i) => {
+          const y = 238 - i * 21;
+          const inset = 18 + i * 12;
+          return `<path d="M${inset} ${y}H${360 - inset}"/>`;
+        }).join("")}
+      </g>
+      <g stroke="#ffcf3f" stroke-width="12" stroke-linecap="round"><path d="M112 78h136"/><path d="M112 178h136"/></g>
+      <g stroke="#ffcf3f" stroke-width="2" opacity=".35"><path d="M112 64v28M248 64v28M112 164v28M248 164v28"/></g>`),
     ebbinghaus: svg(`
       <rect width="360" height="260" fill="#f6fbff"/>
-      <g fill="#2f77c9">${circleRing(105, 130, 56, 23, 8)}${circleRing(255, 130, 42, 11, 8)}</g>
-      <circle cx="105" cy="130" r="26" fill="#dd3f5a"/><circle cx="255" cy="130" r="26" fill="#dd3f5a"/>`),
+      <g fill="#2e78c7" opacity=".96">${circleRing(104, 132, 68, 25, 7)}${circleRing(256, 132, 42, 9, 11)}</g>
+      <circle cx="104" cy="132" r="24" fill="#dd3f5a"/><circle cx="256" cy="132" r="24" fill="#dd3f5a"/>
+      <g fill="none" stroke="#17212b" stroke-width="2" opacity=".16"><circle cx="104" cy="132" r="24"/><circle cx="256" cy="132" r="24"/></g>`),
     cafewall: svg(`
-      <rect width="360" height="260" fill="#777"/>
-      ${Array.from({ length: 8 }, (_, r) => {
-        const offset = r % 2 ? 19 : -19;
-        return `<g transform="translate(${offset} ${24 + r * 29})">${Array.from({ length: 8 }, (_, c) => `<rect x="${c * 56}" y="0" width="48" height="22" fill="${c % 2 ? "#111" : "#fff"}"/>`).join("")}</g><rect x="0" y="${49 + r * 29}" width="360" height="4" fill="#b5b5b5"/>`;
+      <rect width="360" height="260" fill="#6f7477"/>
+      ${Array.from({ length: 9 }, (_, r) => {
+        const offset = r % 2 ? 28 : -8;
+        return `<g transform="translate(${offset} ${18 + r * 27})">${Array.from({ length: 8 }, (_, c) => `<rect x="${c * 54}" y="0" width="44" height="21" fill="${c % 2 ? "#111" : "#f8f5ec"}"/>`).join("")}</g><rect x="0" y="${42 + r * 27}" width="360" height="5" fill="#9b9b9b"/>`;
       }).join("")}`),
     kanizsa: svg(`
-      <rect width="360" height="260" fill="#f5f2ea"/>
+      <rect width="360" height="260" fill="#ddd7cb"/>
+      <polygon points="180,58 88,206 272,206" fill="#ffffff" opacity=".98"/>
       <g fill="#151d25">
-        <path d="M91 63a42 42 0 1 0 36 64l-36-22 36-22a42 42 0 0 0-36-20z"/>
-        <path d="M269 63a42 42 0 1 1-36 64l36-22-36-22a42 42 0 0 1 36-20z"/>
-        <path d="M180 216a42 42 0 1 0 0-84v42h42a42 42 0 0 0-42 42z"/>
+        <circle cx="180" cy="58" r="38"/><circle cx="88" cy="206" r="38"/><circle cx="272" cy="206" r="38"/>
+      </g>
+      <g fill="#151d25">
+        <path d="M180 20a38 38 0 0 0 0 76V58h-38a38 38 0 0 0 38-38z"/>
+        <path d="M55 225a38 38 0 0 0 66-38l-33 19 19 33a38 38 0 0 0-52-14z"/>
+        <path d="M305 225a38 38 0 0 1-66-38l33 19-19 33a38 38 0 0 1 52-14z"/>
       </g>`),
-    rubin: svg(`
-      <rect width="360" height="260" fill="#121820"/>
-      <path fill="#f6f2e8" d="M147 32c22 12 34 31 26 56-5 16-15 22-15 42s10 26 15 42c8 25-4 44-26 56h66c-22-12-34-31-26-56 5-16 15-22 15-42s-10-26-15-42c-8-25 4-44 26-56z"/>`),
     checker: svg(`
-      <rect width="360" height="260" fill="#ddd"/>
-      <g transform="translate(48 22) rotate(-8 132 108)">${Array.from({ length: 8 }, (_, y) => Array.from({ length: 8 }, (_, x) => `<rect x="${x * 34}" y="${y * 27}" width="34" height="27" fill="${(x + y) % 2 ? "#676767" : "#bcbcbc"}"/>`).join("")).join("")}</g>
-      <ellipse cx="210" cy="128" rx="108" ry="64" fill="rgba(20,31,43,.34)" transform="rotate(-18 210 128)"/>
-      <rect x="110" y="108" width="34" height="27" fill="#8b8b8b"/><rect x="216" y="123" width="34" height="27" fill="#8b8b8b"/>
-      <text x="119" y="128" font-size="20" font-weight="800" fill="#111">A</text><text x="225" y="143" font-size="20" font-weight="800" fill="#111">B</text>`),
+      <rect width="360" height="260" fill="#d7d7d7"/>
+      <g transform="translate(54 22)">${Array.from({ length: 8 }, (_, y) => Array.from({ length: 8 }, (_, x) => `<rect x="${x * 32}" y="${y * 26}" width="32" height="26" fill="${(x + y) % 2 ? "#6a6a6a" : "#b9b9b9"}"/>`).join("")).join("")}</g>
+      <ellipse cx="212" cy="126" rx="112" ry="66" fill="rgba(22,32,42,.38)" transform="rotate(-18 212 126)"/>
+      <rect x="102" y="86" width="32" height="26" fill="#878787"/><rect x="226" y="138" width="32" height="26" fill="#878787"/>
+      <g font-size="18" font-weight="800" fill="#111"><text x="80" y="105">A</text><text x="263" y="157">B</text></g>
+      <path d="M134 99C170 91 202 118 226 151" stroke="#ffcf3f" stroke-width="3" fill="none" opacity=".55"/>`),
     contrast: svg(`
-      <rect width="180" height="260" fill="#222"/><rect x="180" width="180" height="260" fill="#ddd"/>
-      <rect x="78" y="92" width="70" height="76" fill="#888"/><rect x="212" y="92" width="70" height="76" fill="#888"/>`),
+      <rect width="360" height="260" fill="#8d8d8d"/>
+      <rect x="0" y="0" width="180" height="260" fill="#111820"/><rect x="180" y="0" width="180" height="260" fill="#eef1f2"/>
+      <g opacity=".18">${Array.from({ length: 8 }, (_, i) => `<rect x="${i * 24}" y="0" width="12" height="260" fill="#fff"/><rect x="${184 + i * 24}" y="0" width="12" height="260" fill="#000"/>`).join("")}</g>
+      <rect x="70" y="88" width="82" height="84" fill="#888"/><rect x="208" y="88" width="82" height="84" fill="#888"/>`),
     lilac: svg(`
+      <defs><filter id="softLilac"><feGaussianBlur stdDeviation="3.2"/></filter></defs>
       <rect width="360" height="260" fill="#f7f7f1"/>
-      <g transform="translate(180 130)">${Array.from({ length: 12 }, (_, i) => `<circle class="blink-dot" style="animation-delay:${i * -0.13}s" cx="${Math.cos((i / 12) * Math.PI * 2) * 86}" cy="${Math.sin((i / 12) * Math.PI * 2) * 86}" r="15" fill="#d775c7"/>`).join("")}<circle r="5" fill="#111"/></g>
-      <style>.blink-dot{animation:blink 1.55s steps(1) infinite}@keyframes blink{0%,8%{opacity:0}9%,100%{opacity:1}}</style>`),
+      <g transform="translate(180 130)">${Array.from({ length: 12 }, (_, i) => `<circle class="blink-dot" style="animation-delay:${i * -0.18}s" cx="${Math.cos((i / 12) * Math.PI * 2) * 86}" cy="${Math.sin((i / 12) * Math.PI * 2) * 86}" r="17" fill="#d785d1" filter="url(#softLilac)"/>`).join("")}<circle r="5" fill="#111"/></g>
+      <style>.blink-dot{animation:blink 2.15s steps(1) infinite}@keyframes blink{0%,11%{opacity:0}12%,100%{opacity:.78}}</style>`),
     aftereffect: svg(`
       <rect width="360" height="260" fill="#111820"/>
-      <g class="spin-lines" transform="translate(180 130)">${Array.from({ length: 28 }, (_, i) => `<rect x="-3" y="-122" width="6" height="244" rx="3" fill="${i % 2 ? "#fff" : "#31b7ad"}" transform="rotate(${i * 12.86})"/>`).join("")}</g>
-      <style>.spin-lines{transform-origin:180px 130px;animation:spin 9s linear infinite}@keyframes spin{to{transform:translate(180px,130px) rotate(360deg)}}</style>`),
+      <g transform="translate(180 102)"><circle r="73" fill="#f6f2e8"/><g class="spin-lines">${Array.from({ length: 34 }, (_, i) => `<rect x="-2" y="-69" width="4" height="138" fill="${i % 2 ? "#111820" : "#f6f2e8"}" transform="rotate(${i * 10.6}) translate(22 0)"/>`).join("")}</g><circle r="5" fill="#dd3f5a"/></g>
+      <g transform="translate(180 207)" stroke="#e8edf0" stroke-width="2" opacity=".75">${Array.from({ length: 10 }, (_, i) => `<path d="M-86 ${-36 + i * 8}H86"/><path d="M${-80 + i * 16} -42V42"/>`).join("")}</g>
+      <style>.spin-lines{transform-origin:0 0;animation:spin 1.2s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}</style>`),
     breathing: svg(`
       <rect width="360" height="260" fill="#faf5ea"/>
-      <g class="pulse" transform="translate(180 130)">${Array.from({ length: 16 }, (_, i) => `<rect x="-8" y="-106" width="16" height="58" rx="7" fill="${i % 2 ? "#0b8f86" : "#dd3f5a"}" transform="rotate(${i * 22.5})"/>`).join("")}</g>
-      <rect x="136" y="86" width="88" height="88" fill="none" stroke="#15212b" stroke-width="9"/>
-      <style>.pulse{transform-origin:180px 130px;animation:breathe 2.8s ease-in-out infinite}@keyframes breathe{50%{transform:translate(180px,130px) scale(1.18) rotate(12deg)}}</style>`),
+      <g transform="translate(180 130)">${Array.from({ length: 4 }, (_, r) => `<rect class="breath-ring" x="${-42 - r * 28}" y="${-42 - r * 28}" width="${84 + r * 56}" height="${84 + r * 56}" fill="none" stroke="${r % 2 ? "#dd3f5a" : "#0b8f86"}" stroke-width="7" opacity="${0.82 - r * 0.13}" transform="rotate(${r * 10})"/>`).join("")}</g>
+      <rect x="138" y="88" width="84" height="84" fill="#faf5ea" stroke="#17212b" stroke-width="8"/>
+      <style>.breath-ring{transform-origin:180px 130px;animation:breathe 2.2s ease-in-out infinite}.breath-ring:nth-of-type(2){animation-delay:.18s}.breath-ring:nth-of-type(3){animation-delay:.34s}.breath-ring:nth-of-type(4){animation-delay:.48s}@keyframes breathe{50%{transform:scale(.82) rotate(18deg)}}</style>`),
     fraser: svg(`
       <rect width="360" height="260" fill="#f6f4ec"/>
-      <g transform="translate(180 130)" fill="none">${Array.from({ length: 10 }, (_, r) => `<circle r="${20 + r * 10}" stroke="#17212b" stroke-width="3"/>`).join("")}
-      ${Array.from({ length: 76 }, (_, i) => `<line x1="${Math.cos(i * .33) * 24}" y1="${Math.sin(i * .33) * 24}" x2="${Math.cos(i * .33) * 116}" y2="${Math.sin(i * .33) * 116}" stroke="${i % 2 ? "#dd3f5a" : "#0b8f86"}" stroke-width="3" transform="rotate(${i * 17})"/>`).join("")}</g>`),
+      <g transform="translate(180 130)">${Array.from({ length: 7 }, (_, r) => {
+        const rad = 30 + r * 13;
+        return `<circle r="${rad}" fill="none" stroke="#17212b" stroke-width="2" opacity=".55"/>${Array.from({ length: 28 }, (_, i) => {
+          const a = (i / 28) * Math.PI * 2;
+          const x = Math.cos(a) * rad;
+          const y = Math.sin(a) * rad;
+          return `<rect x="${x - 8}" y="${y - 3}" width="16" height="6" fill="${i % 2 ? "#dd3f5a" : "#0b8f86"}" transform="rotate(${(a * 180) / Math.PI + 28} ${x} ${y})"/>`;
+        }).join("")}`;
+      }).join("")}</g>`),
     audioScale: audioScene("上がり続ける音", compact),
     audioFundamental: audioScene("ない低音を感じる", compact),
     cutaneous: svg(`
